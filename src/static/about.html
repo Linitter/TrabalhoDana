@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o Projeto - USED CARS SEARCH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #16213e;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav a {
+            color: #eee;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background: #0f3460;
+            color: #00d4ff;
+        }
+
+        nav a.active {
+            background: #0f3460;
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0 2rem 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
+        .content-section {
+            background: #16213e;
+            padding: 2rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .content-section h2 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .content-section h3 {
+            color: #00d4ff;
+            margin: 1.5rem 0 0.8rem 0;
+            font-size: 1.3rem;
+        }
+
+        .content-section p {
+            line-height: 1.7;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        .content-section ul {
+            margin-left: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .content-section li {
+            line-height: 1.7;
+            color: #ccc;
+            margin-bottom: 0.5rem;
+        }
+
+        .algorithm-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .algorithm-card {
+            background: #0f3460;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #1f4068;
+        }
+
+        .algorithm-card h4 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .algorithm-card .complexity {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .algorithm-card p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: #0f3460;
+            padding: 1rem;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .highlight {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        code {
+            background: #0f3460;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: #00d4ff;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Início</a></li>
+            <li><a href="/static/sequential.html">Busca Sequencial</a></li>
+            <li><a href="/static/indexed.html">Busca Indexada</a></li>
+            <li><a href="/static/hash.html">Busca HashMap</a></li>
+            <li><a href="/static/catalog.html">Catálogo</a></li>
+            <li><a href="/static/about.html" class="active">Sobre</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Sobre o Projeto</h1>
+            <p class="subtitle">Sistema de Demonstração de Algoritmos de Busca</p>
+        </header>
+
+        <div class="content-section">
+            <h2>Objetivo</h2>
+            <p>
+                Este projeto foi desenvolvido para demonstrar de forma prática as diferenças entre
+                três algoritmos fundamentais de busca em estruturas de dados. Utilizando uma base
+                real de <span class="highlight">5.000 carros usados</span>, é possível comparar
+                a performance e entender as características de cada método.
+            </p>
+        </div>
+
+        <div class="content-section">
+            <h2>Algoritmos Implementados</h2>
+            
+            <div class="algorithm-comparison">
+                <div class="algorithm-card">
+                    <h4>Busca Sequencial</h4>
+                    <div class="complexity">O(n)</div>
+                    <p>
+                        Percorre todos os registros linearmente. Simples de implementar,
+                        mas ineficiente para grandes volumes de dados.
+                    </p>
+                </div>
+
+                <div class="algorithm-card">
+                    <h4>Busca Indexada</h4>
+                    <div class="complexity">O(log n)</div>
+                    <p>
+                        Utiliza índice em memória para acesso rápido. Equilibra performance
+                        e uso de recursos de forma eficiente.
+                    </p>
+                </div>
+
+                <div class="algorithm-card">
+                    <h4>Busca HashMap</h4>
+                    <div class="complexity">O(1)</div>
+                    <p>
+                        Usa tabela hash para acesso instantâneo. Método mais rápido,
+                        ideal para sistemas de alta performance.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Tecnologias Utilizadas</h2>
+            
+            <div class="tech-list">
+                <div class="tech-item">Python 3.10+</div>
+                <div class="tech-item">Flask</div>
+                <div class="tech-item">Pandas</div>
+                <div class="tech-item">HTML5</div>
+                <div class="tech-item">CSS3</div>
+                <div class="tech-item">JavaScript ES6</div>
+            </div>
+
+            <h3>Backend</h3>
+            <ul>
+                <li><strong>Flask:</strong> Framework web minimalista para Python</li>
+                <li><strong>Pandas:</strong> Manipulação e análise de dados CSV</li>
+                <li><strong>Pickle:</strong> Serialização de estruturas de dados Python</li>
+            </ul>
+
+            <h3>Frontend</h3>
+            <ul>
+                <li><strong>HTML5:</strong> Estrutura semântica das páginas</li>
+                <li><strong>CSS3:</strong> Design responsivo e moderno</li>
+                <li><strong>JavaScript:</strong> Requisições assíncronas e interatividade</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Base de Dados</h2>
+            <p>
+                O sistema utiliza um dataset real contendo <span class="highlight">5.000 registros</span>
+                de carros usados, com os seguintes campos:
+            </p>
+            <ul>
+                <li><strong>ID:</strong> Identificador único do veículo</li>
+                <li><strong>Brand:</strong> Marca do carro (Toyota, Honda, Ford, etc.)</li>
+                <li><strong>Model:</strong> Modelo específico (Civic, Corolla, Mustang, etc.)</li>
+                <li><strong>Year:</strong> Ano de fabricação</li>
+                <li><strong>Price:</strong> Preço em reais (R$)</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Estrutura do Projeto</h2>
+            <p>O projeto está organizado da seguinte forma:</p>
+            <ul>
+                <li><code>db/</code> - Base de dados CSV e HashMap serializado</li>
+                <li><code>src/</code> - Código fonte Python e aplicação Flask</li>
+                <li><code>src/static/</code> - Páginas HTML, CSS e JavaScript</li>
+                <li><code>requirements.txt</code> - Dependências do projeto</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Como Funciona</h2>
+            <p>
+                O sistema oferece três interfaces de busca independentes, cada uma utilizando
+                um algoritmo diferente. Ao realizar uma busca, o sistema:
+            </p>
+            <ol style="margin-left: 2rem; line-height: 1.7; color: #ccc;">
+                <li>Recebe o termo de busca do usuário</li>
+                <li>Processa a requisição no backend usando o algoritmo escolhido</li>
+                <li>Retorna os resultados encontrados</li>
+                <li>Exibe o tempo de execução para comparação</li>
+            </ol>
+        </div>
+
+        <div class="content-section">
+            <h2>Complexidade Computacional</h2>
+            <p>
+                A notação Big O descreve como o tempo de execução cresce conforme
+                o tamanho da entrada aumenta:
+            </p>
+            <ul>
+                <li><strong>O(1):</strong> Tempo constante - não importa o tamanho da base</li>
+                <li><strong>O(log n):</strong> Tempo logarítmico - cresce lentamente</li>
+                <li><strong>O(n):</strong> Tempo linear - cresce proporcionalmente</li>
+            </ul>
+        </div>
+
+        <div class="content-section">
+            <h2>Conclusão</h2>
+            <p>
+                Este projeto demonstra que a escolha do algoritmo correto pode fazer
+                uma diferença significativa na performance de uma aplicação. Enquanto
+                a busca sequencial é adequada para pequenos volumes, a busca HashMap
+                se destaca em sistemas que exigem respostas rápidas e escalabilidade.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

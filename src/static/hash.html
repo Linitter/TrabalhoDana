@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca HashMap - USED CARS SEARCH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #16213e;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav a {
+            color: #eee;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background: #0f3460;
+            color: #00d4ff;
+        }
+
+        nav a.active {
+            background: #0f3460;
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0 2rem 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+
+        .description {
+            background: #16213e;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #00d4ff;
+            margin: 2rem 0;
+            line-height: 1.7;
+        }
+
+        .search-box {
+            background: #16213e;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            margin: 2rem 0;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            background: #0f3460;
+            border: 1px solid #1f4068;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.3);
+            border-color: #00d4ff;
+        }
+
+        input[type="text"]::placeholder {
+            color: #6b7280;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #00d4ff;
+            border: none;
+            border-radius: 6px;
+            color: #1a1a2e;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #00b8d9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.3);
+        }
+
+        .stats {
+            background: #0f3460;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .stats-count {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .stats-time {
+            color: #9ca3af;
+            font-size: 0.9rem;
+        }
+
+        .results {
+            max-height: 500px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .results::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .results::-webkit-scrollbar-track {
+            background: #0f3460;
+            border-radius: 4px;
+        }
+
+        .results::-webkit-scrollbar-thumb {
+            background: #00d4ff;
+            border-radius: 4px;
+        }
+
+        .result-item {
+            background: #0f3460;
+            padding: 1.3rem;
+            margin-bottom: 0.8rem;
+            border-radius: 6px;
+            border-left: 3px solid #00d4ff;
+            transition: all 0.2s;
+        }
+
+        .result-item:hover {
+            background: #1a4d7a;
+            transform: translateX(4px);
+        }
+
+        .result-brand {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .result-model {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .result-details {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-price {
+            color: #10b981;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .loading {
+            text-align: center;
+            color: #00d4ff;
+            padding: 2rem;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #6b7280;
+            padding: 2rem;
+        }
+
+        .error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #dc2626;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Início</a></li>
+            <li><a href="/static/sequential.html">Busca Sequencial</a></li>
+            <li><a href="/static/indexed.html">Busca Indexada</a></li>
+            <li><a href="/static/hash.html" class="active">Busca HashMap</a></li>
+            <li><a href="/static/catalog.html">Catálogo</a></li>
+            <li><a href="/static/about.html">Sobre</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Busca HashMap</h1>
+            <p class="subtitle">Algoritmo com Hash Table - O(1)</p>
+        </header>
+
+        <div class="description">
+            <h3>Como funciona:</h3>
+            <p>
+                A busca HashMap utiliza uma tabela hash para armazenar os dados de forma otimizada.
+                Cada modelo de carro é uma chave hash que permite acesso instantâneo aos registros.
+                Este é o método mais eficiente, com complexidade O(1), significando que o tempo de busca
+                é praticamente constante, independente do tamanho da base de dados.
+            </p>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="Digite marca ou modelo (ex: BMW, X5)">
+            <button onclick="performSearch()">Buscar</button>
+            <div id="stats"></div>
+            <div id="results" class="results"></div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+    <script>
+        async function performSearch() {
+            const query = document.getElementById('search-input').value.trim();
+            const resultsDiv = document.getElementById('results');
+            const statsDiv = document.getElementById('stats');
+            
+            if (!query) {
+                alert('Por favor, digite algo para buscar');
+                return;
+            }
+            
+            resultsDiv.innerHTML = '<div class="loading">Buscando...</div>';
+            statsDiv.innerHTML = '';
+            
+            const startTime = performance.now();
+            
+            try {
+                const response = await fetch(`/api/search/hash?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultsDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                    return;
+                }
+                
+                const endTime = performance.now();
+                const timeMs = (endTime - startTime).toFixed(2);
+                
+                displaySearchResults(data.results, resultsDiv, statsDiv, timeMs);
+            } catch (error) {
+                resultsDiv.innerHTML = '<div class="error">Erro ao buscar.</div>';
+                console.error(error);
+            }
+        }
+
+        function displaySearchResults(results, resultsDiv, statsDiv, timeMs) {
+            if (!results || results.length === 0) {
+                resultsDiv.innerHTML = '<div class="no-results">Nenhum resultado encontrado</div>';
+                statsDiv.innerHTML = `
+                    <div class="stats">
+                        <span class="stats-count">0 resultados</span>
+                        <span class="stats-time">Tempo: ${timeMs}ms</span>
+                    </div>
+                `;
+                return;
+            }
+            
+            statsDiv.innerHTML = `
+                <div class="stats">
+                    <span class="stats-count">${results.length} resultado(s)</span>
+                    <span class="stats-time">${timeMs}ms</span>
+                </div>
+            `;
+            
+            let html = '';
+            results.forEach(car => {
+                html += `
+                    <div class="result-item">
+                        <div class="result-brand">${car.brand || 'N/A'}</div>
+                        <div class="result-model">${car.model || 'N/A'}</div>
+                        <div class="result-details">Ano: ${car.year || 'N/A'} | ID: ${car.id || 'N/A'}</div>
+                        <div class="result-price">R$ ${car.price ? parseFloat(car.price).toLocaleString('pt-BR', {minimumFractionDigits: 2}) : '0,00'}</div>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') performSearch();
+        });
+    </script>
+</body>
+</html>

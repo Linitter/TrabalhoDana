@@ -1,0 +1,251 @@
+"""
+search_utils.py
+Implementa os três tipos de busca em carros usados.
+"""
+
+import csv
+import pickle
+import os
+
+CSV_PATH = os.path.join('db', 'used_cars.csv')
+HASH_PATH = os.path.join('db', 'hashmap.pickle')
+
+# Carregar dados do CSV
+def load_csv_data():
+    """Carrega todos os dados do CSV"""
+    cars = []
+    with open(CSV_PATH, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            cars.append({
+                'id': int(row['id']),
+                'brand': row['brand'],
+                'model': row['model'],
+                'year': int(row['year']),
+                'price': float(row['price'])
+            })
+    return cars
+
+# Criar índice em memória
+def create_index():
+    """Cria um índice em memória por modelo"""
+    cars = load_csv_data()
+    index = {}
+    for car in cars:
+        model_lower = car['model'].lower()
+        if model_lower not in index:
+            index[model_lower] = []
+        index[model_lower].append(car)
+    return index
+
+# Criar hashmap
+def create_hashmap():
+    """Cria HashMap e persiste"""
+    cars = load_csv_data()
+    hashmap = {}
+    for car in cars:
+        model_lower = car['model'].lower()
+        if model_lower not in hashmap:
+            hashmap[model_lower] = []
+        hashmap[hashmap].append(car)
+    
+    # Salvar
+    with open(HASH_PATH, 'wb') as f:
+        pickle.dump(hashmap, f)
+    
+    return hashmap
+
+# Carregar hashmap
+def load_hashmap():
+    """Carrega HashMap do arquivo"""
+    if not os.path.exists(HASH_PATH):
+        return create_hashmap()
+    
+    with open(HASH_PATH, 'rb') as f:
+        return pickle.load(f)
+
+# Carregar HashMap na memória (executado uma vez)
+_hashmap_cache = None
+
+def load_hashmap():
+    """Carrega o HashMap do arquivo pickle"""
+    global _hashmap_cache
+    if _hashmap_cache is None:
+        with open(HASH_PATH, 'rb') as f:
+            _hashmap_cache = pickle.load(f)
+    return _hashmap_cache
+
+
+def search_sequential(query):
+    """
+    BUSCA SEQUENCIAL (Linear Search)
+    
+    Percorre todos os registros do banco linearmente,
+    comparando cada registro com o termo de busca.
+    
+    Complexidade: O(n)
+    """
+    if not query:
+        return []
+    
+    query_lower = query.lower()
+    results = []
+    
+    # Conectar ao banco
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    # Buscar TODOS os registros
+    cursor.execute('SELECT id, brand, model, year, price FROM cars')
+    
+    # Percorrer manualmente cada registro
+    for row in cursor:
+        brand = row['brand'].lower()
+        model = row['model'].lower()
+        
+        # Comparar se o termo está contido na marca ou modelo
+        if query_lower in brand or query_lower in model:
+            results.append({
+                'id': row['id'],
+                'brand': row['brand'],
+                'model': row['model'],
+                'year': row['year'],
+                'price': row['price']
+            })
+    
+    conn.close()
+    
+    # Limitar resultados
+    return results[:100]
+
+
+def search_indexed(query):
+    """
+    BUSCA INDEXADA (Indexed Search)
+    
+    Utiliza o índice criado no banco de dados SQLite
+    para realizar uma busca otimizada usando SQL.
+    
+    Complexidade: O(log n)
+    """
+    if not query:
+        return []
+    
+    results = []
+    
+    # Conectar ao banco
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    # Usar SELECT com WHERE e LIKE
+    # O índice no campo 'model' acelera esta busca
+    query_pattern = f'%{query}%'
+    
+    cursor.execute('''
+        SELECT id, brand, model, year, price 
+        FROM cars 
+        WHERE model LIKE ? OR brand LIKE ?
+        LIMIT 100
+    ''', (query_pattern, query_pattern))
+    
+    for row in cursor:
+        results.append({
+            'id': row['id'],
+            'brand': row['brand'],
+            'model': row['model'],
+            'year': row['year'],
+            'price': row['price']
+        })
+    
+    conn.close()
+    
+    return results
+
+
+def search_hashmap(query):
+    """
+    BUSCA COM HASHMAP (Hash-based Search)
+    
+    Busca diretamente em uma estrutura HashMap em memória,
+    onde a chave é o modelo do carro em lowercase.
+    
+    Complexidade: O(1) no caso médio
+    """
+    if not query:
+        return []
+    
+    query_lower = query.lower()
+    results = []
+    
+    # Carregar HashMap
+    hashmap = load_hashmap()
+    
+    # Buscar correspondências exatas na chave
+    if query_lower in hashmap:
+        results.extend(hashmap[query_lower])
+    
+    # Buscar correspondências parciais (substring)
+    for key, cars in hashmap.items():
+        if query_lower in key and query_lower != key:
+            results.extend(cars)
+        
+        # Limitar para não sobrecarregar
+        if len(results) >= 100:
+            break
+    
+    # Também buscar na marca
+    if len(results) < 100:
+        for key, cars in hashmap.items():
+            for car in cars:
+                if query_lower in car['brand'].lower():
+                    if car not in results:
+                        results.append(car)
+                        if len(results) >= 100:
+                            break
+            if len(results) >= 100:
+                break
+    
+    return results[:100]
+
+
+def get_catalog(page=1, per_page=20):
+    """
+    Retorna uma lista paginada de carros para o catálogo.
+    """
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    
+    offset = (page - 1) * per_page
+    
+    cursor.execute('''
+        SELECT id, brand, model, year, price 
+        FROM cars 
+        LIMIT ? OFFSET ?
+    ''', (per_page, offset))
+    
+    results = []
+    for row in cursor:
+        results.append({
+            'id': row['id'],
+            'brand': row['brand'],
+            'model': row['model'],
+            'year': row['year'],
+            'price': row['price']
+        })
+    
+    # Total de registros
+    cursor.execute('SELECT COUNT(*) as total FROM cars')
+    total = cursor.fetchone()['total']
+    
+    conn.close()
+    
+    return {
+        'results': results,
+        'total': total,
+        'page': page,
+        'per_page': per_page,
+        'total_pages': (total + per_page - 1) // per_page
+    }

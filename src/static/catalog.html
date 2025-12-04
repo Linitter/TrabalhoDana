@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo Completo - USED CARS SEARCH</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #16213e;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        nav a {
+            color: #eee;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background: #0f3460;
+            color: #00d4ff;
+        }
+
+        nav a.active {
+            background: #0f3460;
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0 2rem 0;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #00d4ff;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
+        .info-bar {
+            background: #16213e;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .info-text {
+            color: #aaa;
+        }
+
+        .total-count {
+            color: #00d4ff;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .car-card {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid #1f2937;
+            transition: all 0.3s;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+        }
+
+        .car-brand {
+            color: #00d4ff;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .car-model {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+        }
+
+        .car-details {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .car-price {
+            color: #10b981;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 0.8rem 1.5rem;
+            background: #16213e;
+            border: 1px solid #1f4068;
+            border-radius: 6px;
+            color: #00d4ff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: #00d4ff;
+            color: #1a1a2e;
+            transform: translateY(-2px);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .page-info {
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            color: #00d4ff;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+
+        .error {
+            background: #7f1d1d;
+            color: #fca5a5;
+            padding: 1.5rem;
+            border-radius: 6px;
+            border-left: 3px solid #dc2626;
+            text-align: center;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Início</a></li>
+            <li><a href="/static/sequential.html">Busca Sequencial</a></li>
+            <li><a href="/static/indexed.html">Busca Indexada</a></li>
+            <li><a href="/static/hash.html">Busca HashMap</a></li>
+            <li><a href="/static/catalog.html" class="active">Catálogo</a></li>
+            <li><a href="/static/about.html">Sobre</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Catálogo de Carros Usados</h1>
+            <p class="subtitle">Visualize todos os veículos disponíveis no sistema</p>
+        </header>
+
+        <div class="info-bar">
+            <span class="info-text">Total de veículos no catálogo:</span>
+            <span class="total-count" id="total-count">-</span>
+        </div>
+
+        <div id="catalog-container" class="catalog-grid"></div>
+
+        <div class="pagination">
+            <button id="btn-first" onclick="goToPage(1)">Primeira</button>
+            <button id="btn-prev" onclick="previousPage()">Anterior</button>
+            <span class="page-info" id="page-info">Página 1</span>
+            <button id="btn-next" onclick="nextPage()">Próxima</button>
+            <button id="btn-last" onclick="goToLastPage()">Última</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let totalCars = 0;
+        const perPage = 20;
+
+        async function loadCatalog(page = 1) {
+            const container = document.getElementById('catalog-container');
+            container.innerHTML = '<div class="loading">Carregando catálogo...</div>';
+
+            try {
+                const url = `/api/catalog?page=${page}&per_page=${perPage}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.error) {
+                    container.innerHTML = `<div class="error">${data.error}</div>`;
+                    return;
+                }
+
+                // A API retorna "results" não "cars"
+                const cars = data.results || data.cars || [];
+
+                if (!cars || cars.length === 0) {
+                    container.innerHTML = '<div class="error">Nenhum veículo encontrado</div>';
+                    return;
+                }
+
+                currentPage = data.page;
+                totalPages = data.total_pages;
+                totalCars = data.total;
+
+                document.getElementById('total-count').textContent = totalCars.toLocaleString('pt-BR');
+                displayCatalog(cars);
+                updatePagination();
+
+            } catch (error) {
+                console.error('Erro ao carregar catálogo:', error);
+                container.innerHTML = `<div class="error">Erro ao carregar catálogo: ${error.message}</div>`;
+            }
+        }
+
+        function displayCatalog(cars) {
+            const container = document.getElementById('catalog-container');
+
+            if (!cars || cars.length === 0) {
+                container.innerHTML = '<div class="error">Nenhum veículo encontrado</div>';
+                return;
+            }
+
+            let html = '';
+            cars.forEach(car => {
+                html += `
+                    <div class="car-card">
+                        <div class="car-brand">${car.brand || 'N/A'}</div>
+                        <div class="car-model">${car.model || 'N/A'}</div>
+                        <div class="car-details">Ano: ${car.year || 'N/A'} | ID: ${car.id || 'N/A'}</div>
+                        <div class="car-price">R$ ${car.price ? parseFloat(car.price).toLocaleString('pt-BR', {minimumFractionDigits: 2}) : '0,00'}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function updatePagination() {
+            document.getElementById('page-info').textContent = `Página ${currentPage} de ${totalPages}`;
+            
+            document.getElementById('btn-first').disabled = currentPage === 1;
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === totalPages;
+            document.getElementById('btn-last').disabled = currentPage === totalPages;
+        }
+
+        function goToPage(page) {
+            if (page >= 1 && page <= totalPages) {
+                loadCatalog(page);
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                loadCatalog(currentPage + 1);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                loadCatalog(currentPage - 1);
+            }
+        }
+
+        function goToLastPage() {
+            loadCatalog(totalPages);
+        }
+
+        // Carregar catálogo ao abrir a página
+        window.onload = () => loadCatalog(1);
+    </script>
+</body>
+</html>
