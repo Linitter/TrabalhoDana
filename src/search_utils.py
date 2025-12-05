@@ -1,8 +1,3 @@
-"""
-search_utils.py
-Implementa os três tipos de busca em carros usados usando CSV diretamente.
-"""
-
 import csv
 import pickle
 import os

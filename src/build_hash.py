@@ -1,21 +1,9 @@
-"""
-build_hash.py
-Constrói o HashMap a partir dos dados do CSV e persiste em arquivo.
-"""
-
 import csv
 import pickle
 import os
 import sys
 
 def build_hashmap():
-    """
-    Constrói um HashMap onde:
-    - Chave: model em lowercase
-    - Valor: lista de registros completos (dicionários)
-    
-    Persiste o HashMap em arquivo pickle.
-    """
     
     csv_path = os.path.join('db', 'used_cars.csv')
     hash_path = os.path.join('db', 'hashmap.pickle')

@@ -1,22 +1,9 @@
-"""
-db_setup.py
-Cria o banco de dados SQLite e importa os dados do CSV.
-"""
-
 import sqlite3
 import pandas as pd
 import os
 import sys
 
 def setup_database():
-    """
-    Configura o banco de dados:
-    1. Valida se o CSV tem no mínimo 5000 registros
-    2. Cria o banco de dados SQLite
-    3. Cria a tabela cars
-    4. Cria índice no campo model
-    5. Importa os dados do CSV
-    """
     
     # Caminhos dos arquivos
     csv_path = os.path.join('db', 'used_cars.csv')

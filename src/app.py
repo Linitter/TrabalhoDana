@@ -1,8 +1,3 @@
-"""
-app.py
-Servidor Flask principal da aplicação USED CARS SEARCH
-"""
-
 from flask import Flask, jsonify, request, send_from_directory
 import os
 import sys
@@ -145,7 +140,7 @@ def internal_error(e):
 
 if __name__ == '__main__':
     print("=" * 60)
-    print("🚗 USED CARS SEARCH - Sistema de Busca de Carros Usados")
+    print("🚗 UBUSCA DE CARROS USADOS - Sistema de Busca de Carros Usados")
     print("=" * 60)
     print("\n🔧 Iniciando servidor Flask...")
     print("🌐 Acesse: http://localhost:5000")

@@ -1,11 +1,3 @@
-/**
- * main.js
- * Lógica do front-end para as buscas
- */
-
-/**
- * Realiza a busca na API
- */
 async function performSearch(method, query) {
     const resultsContainer = document.getElementById('results-container');
     const resultsInfo = document.getElementById('results-info');
@@ -48,7 +40,7 @@ async function performSearch(method, query) {
             resultsInfo.classList.add('show');
         }
         
-        // Renderizar resultados
+        // Renderiza resultados
         renderResults(resultsContainer, data.results);
         
     } catch (error) {
@@ -142,6 +134,6 @@ function getAlgorithmName(method) {
  * Inicialização
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚗 USED CARS SEARCH inicializado');
+    console.log('🚗 BUSCAS DE CARROS USADOS inicializado');
     console.log('✅ Sistema pronto para buscas');
 });
