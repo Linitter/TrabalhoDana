@@ -139,16 +139,22 @@ def internal_error(e):
 
 
 if __name__ == '__main__':
-    print("=" * 60)
-    print("🚗 BUSCA DE CARROS USADOS - Sistema de Busca de Carros Usados")
-    print("=" * 60)
-    print("\n🔧 Iniciando servidor Flask...")
-    print("🌐 Acesse: http://localhost:5000")
-    print("\n💡 Pressione CTRL+C para encerrar\n")
+    import os
+    
+    # Detectar se está no PythonAnywhere
+    is_pythonanywhere = 'PYTHONANYWHERE_DOMAIN' in os.environ
+    
+    if not is_pythonanywhere:
+        print("=" * 60)
+        print("🚗 BUSCA DE CARROS USADOS - Sistema de Busca de Carros Usados")
+        print("=" * 60)
+        print("\n🔧 Iniciando servidor Flask...")
+        print("🌐 Acesse: http://localhost:5000")
+        print("\n💡 Pressione CTRL+C para encerrar\n")
     
     # Iniciar servidor
     app.run(
         host='0.0.0.0',
         port=5000,
-        debug=True
+        debug=not is_pythonanywhere  # Debug OFF em produção
     )
