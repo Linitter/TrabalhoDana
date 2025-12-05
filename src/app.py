@@ -139,16 +139,13 @@ def internal_error(e):
 
 
 if __name__ == '__main__':
-    print("=" * 60)
-    print("🚗 UBUSCA DE CARROS USADOS - Sistema de Busca de Carros Usados")
-    print("=" * 60)
-    print("\n🔧 Iniciando servidor Flask...")
-    print("🌐 Acesse: http://localhost:5000")
-    print("\n💡 Pressione CTRL+C para encerrar\n")
+    import os
+    port = int(os.environ.get('PORT', 5000))
     
-    # Iniciar servidor
-    app.run(
-        host='0.0.0.0',
-        port=5000,
-        debug=True
-    )
+    print("\n" + "="*60)
+    print("BUSCA DE CARROS USADOS - Sistema de Busca de Carros Usados")
+    print("="*60)
+    print(f"\nIniciando servidor na porta {port}...")
+    print("\nPressione CTRL+C para encerrar\n")
+    
+    app.run(host='0.0.0.0', port=port, debug=False)
